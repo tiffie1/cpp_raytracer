@@ -1,5 +1,8 @@
 #include <Camera.h>
 #include <Canvas.h>
+#include <Engine.h>
+#include <Scene.h>
+
 #include <Inf.h>
 #include <iostream>
 
@@ -56,15 +59,15 @@ Vector ClampColor(Vector &color) {
   return Vector(round(color.x), round(color.y), round(color.z));
 }
 
-void Camera::render_scene(Canvas &canvas, unsigned short recursion_limit) {
+void Camera::render_scene(Canvas &canvas, Scene &scene, unsigned short recursion_limit) {
   canvas.open();
 
   for (double y = floor(canvas.getHeight() / 2) - 1;
        y >= -floor(canvas.getHeight() / 2); y--) {
     for (double x = (-floor(canvas.getWidth() / 2));
          x < floor(canvas.getWidth() / 2); x++) {
-      Vector direction = CanvasToViewPort(x, y);
-      Vector color = TraceRay(getOrigin(), direction, 1, INF, recursion_limit);
+      Vector direction = CanvasToViewPort(canvas, x, y);
+      Vector color = TraceRay(scene, getOrigin(), direction, 1, INF, recursion_limit);
 
       color = ClampColor(color);
       canvas.plot(color);
@@ -74,7 +77,8 @@ void Camera::render_scene(Canvas &canvas, unsigned short recursion_limit) {
   canvas.close();
 }
 
-void Camera::render_animation(Canvas &canvas, unsigned short recursion_limit,
+void Camera::render_animation(Canvas &canvas, Scene &scene,
+                              unsigned short recursion_limit,
                               unsigned short frame_count,
                               std::string anim_name) {
   std::string file_path = "animations/" + anim_name + "/";
@@ -86,7 +90,7 @@ void Camera::render_animation(Canvas &canvas, unsigned short recursion_limit,
 
   for (unsigned int i = 0; i < frame_count; i++) {
     canvas.setName(file_path + (canvas_name + std::to_string(i) + ".ppm"));
-    render_scene(canvas, recursion_limit);
+    render_scene(canvas, scene, recursion_limit);
 
     temp = linear_map(i, 0, frame_count, 1, 3);
     if (anim_name == "roll") {
@@ -120,7 +124,8 @@ Vector operator*(std::array<Vector, 3> matrix, Vector vector) {
 }
 
 Vector Camera::CanvasToViewPort(Canvas &canvas, double x, double y) {
-  return rotational_matrix * Vector(x * canvas.getV_Width()/canvas.getWidth(),
-                                    y * canvas.getV_Height()/canvas.getHeight(),
-                                    canvas.getV_Distance());
+  return rotational_matrix *
+         Vector(x * canvas.getV_Width() / canvas.getWidth(),
+                y * canvas.getV_Height() / canvas.getHeight(),
+                canvas.getV_Distance());
 }

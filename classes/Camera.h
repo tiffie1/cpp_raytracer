@@ -2,7 +2,9 @@
 #define CAMERA_H
 
 #include "Canvas.h"
+#include "Scene.h"
 #include "Vector.h"
+
 #include <array>
 #include <string>
 
@@ -21,9 +23,11 @@ public:
   void move(double displacement_x, double displacement_y,
             double displacement_z);
 
-  void render_scene(Canvas &canvas, unsigned short recursion_limit);
+  void render_scene(Canvas &canvas, Scene &scene, unsigned short recursion_limit);
 
-  void render_animation(Canvas &canvas, unsigned short recursion_limit, unsigned short frame_count, std::string anim_name);
+  void render_animation(Canvas &canvas, Scene &scene,
+                        unsigned short recursion_limit,
+                        unsigned short frame_count, std::string anim_name);
 
   Vector CanvasToViewPort(Canvas &canvas, double x, double y);
 };

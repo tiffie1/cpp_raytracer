@@ -2,10 +2,9 @@
 #include <Plane.h>
 #include <Scene.h>
 #include <Sphere.h>
-#include <Vector.h>
 
-Scene::Scene(std::string scene_identify)
-    : scene_identification(scene_identify) {
+Scene::Scene(std::string scene_identify, Vector background_color)
+    : scene_identification(scene_identify), bg_color(background_color) {
   if (scene_identification == "basic") {
     std::array<Object3D *, 7> objects_arr = {
         {new Sphere(Vector(0, -1, 3), 1, Vector(255, 0, 0), 500, 0.2),
@@ -63,3 +62,5 @@ Scene::Scene(std::string scene_identify)
     lights = lights_arr;
   }
 }
+
+Vector Scene::getBackgroundColor() const { return bg_color; }
