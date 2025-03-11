@@ -1,3 +1,5 @@
+#include "classes/Vector.h"
+
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -8,72 +10,6 @@
 using namespace std;
 
 double INF = numeric_limits<double>::infinity();
-
-class Vector {
-public:
-  double x, y, z;
-
-  Vector() {
-    x = 0;
-    y = 0;
-    z = 0;
-  }
-  Vector(double x_val, double y_val, double z_val) {
-    x = x_val;
-    y = y_val;
-    z = z_val;
-  }
-
-  Vector operator+(const Vector &other) {
-    return Vector(x + other.x, y + other.y, z + other.z);
-  }
-
-  Vector operator-(const Vector &other) {
-    return Vector(x - other.x, y - other.y, z - other.z);
-  }
-
-  Vector operator/(const Vector &other) {
-    return Vector(x / other.x, y / other.y, z / other.z);
-  }
-
-  Vector operator*(const Vector &other) {
-    return Vector(x * other.x, y * other.y, z * other.z);
-  }
-
-  Vector operator/(const double &scalar) {
-    return Vector(x / scalar, y / scalar, z / scalar);
-  }
-
-  Vector operator*(const double &scalar) {
-    return Vector(x * scalar, y * scalar, z * scalar);
-  }
-
-  Vector operator-() const { return Vector(-x, -y, -z); }
-
-  Vector &operator=(const Vector &other) {
-    if (this != &other) {
-      x = other.x;
-      y = other.y;
-      z = other.z;
-    }
-
-    return *this;
-  }
-
-  double dot(const Vector &other) const {
-    return x * other.x + y * other.y + z * other.z;
-  }
-  double norm() { return sqrt(x * x + y * y + z * z); }
-
-  /**
-   * @brief Prints as (x, y, z).
-   * @returns Stream object.
-   */
-  friend ostream &operator<<(ostream &stream, const Vector &vector) {
-    stream << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
-    return stream;
-  }
-};
 
 class Canvas {
 private:
@@ -449,7 +385,7 @@ public:
                       0.3), // white floor sphere
            new Sphere(Vector(-4, 0, 5), 1, Vector(255, 168, 167), 5,
                       0.3), // pink target sphere
-           new Sphere(Vector(4, 0, 5), 1, Vector(168, 167, 255), 5, 0.3), 
+           new Sphere(Vector(4, 0, 5), 1, Vector(168, 167, 255), 5, 0.3),
            new Sphere(), new Sphere(), new Sphere(), new Sphere()}};
 
       objects = objects_arr;
@@ -652,7 +588,9 @@ double linear_map(double input, double input_min, double input_max,
                           (input - input_min);
 }
 
-double fractional_function(double x, double strength) { return 1 / (pow(x, strength)); }
+double fractional_function(double x, double strength) {
+  return 1 / (pow(x, strength));
+}
 
 void Camera::render_animation(Canvas &canvas, unsigned short recursion_limit,
                               unsigned short frame_count, string anim_name) {
@@ -669,11 +607,13 @@ void Camera::render_animation(Canvas &canvas, unsigned short recursion_limit,
 
     temp = linear_map(i, 0, frame_count, 1, 3);
     if (anim_name == "roll") {
-      cout << "movement: " << Vector(fractional_function(temp, 5), 0, 0) << endl;
+      cout << "movement: " << Vector(fractional_function(temp, 5), 0, 0)
+           << endl;
       scene.objects[1]->shift(Vector(fractional_function(temp, 5), 0, 0));
 
     } else if (anim_name == "rise") {
-      cout << "movement: " << Vector(0, fractional_function(temp, 5), 0) << endl;
+      cout << "movement: " << Vector(0, fractional_function(temp, 5), 0)
+           << endl;
       scene.objects[1]->shift(Vector(0, fractional_function(temp, 5), 0));
 
     } else if (anim_name == "collide") {
