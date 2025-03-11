@@ -1,0 +1,5 @@
+for i in {0..29}; do magick "frame$i.ppm" "frame$i.png"; done
+mkdir png
+mv *.png png
+for i in {0..29}; do mv "frame$i.png" "$(printf "frame%03.png" "$i")"; done
+ffmpeg -framerate 24 -i frame%03.png -pix_fmt yuv420p output.mp4
