@@ -1,4 +1,4 @@
-#include <Canvas.h>
+#include "Canvas.h"
 
 Canvas::Canvas() {
   name = "";
@@ -15,7 +15,7 @@ Canvas::Canvas(std::string file_name, unsigned short canvas_width,
   height = canvas_height;
   v_height = viewport_height;
   v_width = viewport_width;
-  v_width = viewport_width;
+  v_dist = viewport_distance;
   stream.open(name);
 
   stream << "P3 \n" << width << " " << height << "\n255\n"; // Header info.

@@ -1,10 +1,10 @@
-#include <Engine.h>
-#include <Inf.h>
-#include <Light.h>
+#include "Engine.h"
+#include "Inf.h"
+#include "Light.h"
 
-std::pair<const Object3D *, double> ClosestIntersection(Scene &scene, Vector origin,
-                                                   Vector direction,
-                                                   double t_min, double t_max) {
+std::pair<const Object3D *, double>
+ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
+                    double t_max) {
   double closest_t = INF;
   const Object3D *closest_object = nullptr;
 
@@ -84,8 +84,8 @@ Vector ReflectRay(Vector reflect_vec, Vector normal_vec) {
   return (normal_vec * 2 * normal_vec.dot(reflect_vec)) - reflect_vec;
 }
 
-Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min, double t_max,
-                int recursion_depth) {
+Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
+                double t_max, int recursion_depth) {
   std::pair<const Object3D *, double> result =
       ClosestIntersection(scene, origin, direction, t_min, t_max);
   const Object3D *closest_object = result.first;
@@ -99,8 +99,8 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min, dou
   normal_vec = normal_vec / normal_vec.norm();
   Vector view_vec = -direction;
 
-  double intensity = ComputeLighting(scene, intersect_point, normal_vec, view_vec,
-                                     closest_object->getSpecular());
+  double intensity = ComputeLighting(scene, intersect_point, normal_vec,
+                                     view_vec, closest_object->getSpecular());
   Vector local_color = closest_object->getColor() * intensity;
 
   float reflect_val = closest_object->getReflective();
@@ -110,8 +110,8 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min, dou
   }
 
   Vector reflection_vec = ReflectRay(view_vec, normal_vec);
-  Vector reflected_color =
-      TraceRay(scene, intersect_point, reflection_vec, 0.01, INF, recursion_depth - 1);
+  Vector reflected_color = TraceRay(scene, intersect_point, reflection_vec,
+                                    0.01, INF, recursion_depth - 1);
 
   return (local_color * (1 - reflect_val)) + (reflected_color * reflect_val);
 }

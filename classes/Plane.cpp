@@ -1,10 +1,12 @@
-#include <Inf.h>
-#include <Plane.h>
-#include <Vector.h>
+#include "Inf.h"
+#include "Plane.h"
+#include "Vector.h"
 
 Plane::Plane()
     : coefficients(Vector()), color(Vector()), position_constant(0),
       specular(0) {}
+
+Plane::~Plane() {}
 
 Plane::Plane(const char plane_type[2], Vector plane_color,
              double positional_const, double spec_value, double reflect_val) {

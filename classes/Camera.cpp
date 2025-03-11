@@ -1,10 +1,9 @@
-#include <Camera.h>
-#include <Canvas.h>
-#include <Engine.h>
-#include <Scene.h>
-
-#include <Inf.h>
-#include <iostream>
+#include "Camera.h"
+#include "Canvas.h"
+#include "Engine.h"
+#include "Scene.h"
+#include "Inf.h"
+#include <math.h>
 
 Camera::Camera() : origin(Vector()) { rotate(0, 0, 0); }
 Camera::Camera(Vector origin_vec) : origin(origin_vec) { rotate(0, 0, 0); }
@@ -59,7 +58,8 @@ Vector ClampColor(Vector &color) {
   return Vector(round(color.x), round(color.y), round(color.z));
 }
 
-void Camera::render_scene(Canvas &canvas, Scene &scene, unsigned short recursion_limit) {
+void Camera::render_scene(Canvas &canvas, Scene &scene,
+                          unsigned short recursion_limit) {
   canvas.open();
 
   for (double y = floor(canvas.getHeight() / 2) - 1;
@@ -67,7 +67,8 @@ void Camera::render_scene(Canvas &canvas, Scene &scene, unsigned short recursion
     for (double x = (-floor(canvas.getWidth() / 2));
          x < floor(canvas.getWidth() / 2); x++) {
       Vector direction = CanvasToViewPort(canvas, x, y);
-      Vector color = TraceRay(scene, getOrigin(), direction, 1, INF, recursion_limit);
+      Vector color =
+          TraceRay(scene, origin, direction, 1, INF, recursion_limit);
 
       color = ClampColor(color);
       canvas.plot(color);
@@ -86,33 +87,21 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
       canvas.getName().substr(0, canvas.getName().find(".ppm"));
   double temp;
 
-  std::cout << "before: " << scene.objects[1]->getCenter() << std::endl;
-
   for (unsigned int i = 0; i < frame_count; i++) {
     canvas.setName(file_path + (canvas_name + std::to_string(i) + ".ppm"));
     render_scene(canvas, scene, recursion_limit);
 
     temp = linear_map(i, 0, frame_count, 1, 3);
     if (anim_name == "roll") {
-      std::cout << "movement: " << Vector(fractional_function(temp, 5), 0, 0)
-                << std::endl;
       scene.objects[1]->shift(Vector(fractional_function(temp, 5), 0, 0));
 
     } else if (anim_name == "rise") {
-      std::cout << "movement: " << Vector(0, fractional_function(temp, 5), 0)
-                << std::endl;
       scene.objects[1]->shift(Vector(0, fractional_function(temp, 5), 0));
 
     } else if (anim_name == "collide") {
-      std::cout << "before 1: " << scene.objects[1]->getCenter() << std::endl;
-      std::cout << "before 2: " << scene.objects[2]->getCenter() << std::endl;
-
       scene.objects[1]->shift(Vector(fractional_function(temp, 4), 0, 0));
       scene.objects[2]->shift(Vector(-fractional_function(temp, 4), 0, 0));
     }
-
-    std::cout << "after 1: " << scene.objects[1]->getCenter() << std::endl;
-    std::cout << "after 2: " << scene.objects[2]->getCenter() << std::endl;
   }
 }
 

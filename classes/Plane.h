@@ -15,6 +15,7 @@ private:
 
 public:
   Plane();
+  ~Plane();
 
   Plane(const char plane_type[2], Vector plane_color, double positional_const,
         double spec_value, double reflect_val);

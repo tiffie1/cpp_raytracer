@@ -1,5 +1,5 @@
-#include <Inf.h>
-#include <Sphere.h>
+#include "Inf.h"
+#include "Sphere.h"
 
 Sphere::Sphere() {
   center = Vector(0, 0, 0);
@@ -9,6 +9,8 @@ Sphere::Sphere() {
   reflective = 0;
   is_valid = false;
 }
+
+Sphere::~Sphere() {}
 
 Sphere::Sphere(Vector center_val, double radius_val, Vector color_vec,
                float specular_val, float reflect_val) {

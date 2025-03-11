@@ -6,7 +6,7 @@
 
 class Object3D {
 public:
-  virtual ~Object3D();
+  virtual ~Object3D() {}
 
   virtual std::array<double, 2> intersect(Vector origin,
                                           Vector direction) const = 0;
