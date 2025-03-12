@@ -29,6 +29,8 @@ public:
                         unsigned short recursion_limit,
                         unsigned short frame_count, std::string anim_name);
 
+  // void render_subpixel(
+
   Vector CanvasToViewPort(Canvas &canvas, double x, double y);
 };
 

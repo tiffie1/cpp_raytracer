@@ -65,4 +65,6 @@ Scene::Scene(std::string scene_identify, Vector background_color)
   }
 }
 
+Scene::~Scene() {}
+
 Vector Scene::getBackgroundColor() const { return bg_color; }

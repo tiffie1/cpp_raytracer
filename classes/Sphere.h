@@ -16,10 +16,10 @@ private:
 
 public:
   Sphere();
-  ~Sphere();
-
   Sphere(Vector center_val, double radius_val, Vector color_vec,
          float specular_val, float reflect_val);
+  ~Sphere();
+
   Vector getCenter() const;
   double getRadius() const;
   Vector getColor() const;

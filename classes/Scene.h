@@ -16,6 +16,7 @@ public:
   std::array<Object3D *, 7> objects;
 
   Scene(std::string scene_identify, Vector background_color);
+  ~Scene();
 
   Vector getBackgroundColor() const;
 };
