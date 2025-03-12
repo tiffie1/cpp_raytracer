@@ -1,5 +1,5 @@
-#include "Inf.h"
 #include "Plane.h"
+#include "Inf.h"
 #include "Vector.h"
 
 Plane::Plane()
@@ -67,12 +67,14 @@ Vector Plane::normal(Vector intersect_point) const {
   intersect_point.norm(); // supress unused parameter warning
 
   if (position_constant >= 0)
+
     return -coefficients;
   else
     return coefficients;
 }
 
 Plane &Plane::operator=(const Plane &other) {
+
   coefficients = other.coefficients;
   color = other.color;
   position_constant = other.position_constant;
