@@ -29,7 +29,7 @@ public:
                         unsigned short recursion_limit,
                         unsigned short frame_count, std::string anim_name);
 
-  // void render_subpixel(
+  Vector render_subpixel(Scene &scene, Vector direction, int x, int y, unsigned short recursion_limit);
 
   Vector CanvasToViewPort(Canvas &canvas, double x, double y);
 };

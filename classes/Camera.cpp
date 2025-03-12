@@ -1,8 +1,8 @@
 #include "Camera.h"
 #include "Canvas.h"
 #include "Engine.h"
-#include "Scene.h"
 #include "Inf.h"
+#include "Scene.h"
 #include <math.h>
 
 Camera::Camera() : origin(Vector()) { rotate(0, 0, 0); }
@@ -62,13 +62,12 @@ void Camera::render_scene(Canvas &canvas, Scene &scene,
                           unsigned short recursion_limit) {
   canvas.open();
 
-  for (double y = floor(canvas.getHeight() / 2) - 1;
+  for (int y = floor(canvas.getHeight() / 2) - 1;
        y >= -floor(canvas.getHeight() / 2); y--) {
-    for (double x = (-floor(canvas.getWidth() / 2));
+    for (int x = (-floor(canvas.getWidth() / 2));
          x < floor(canvas.getWidth() / 2); x++) {
       Vector direction = CanvasToViewPort(canvas, x, y);
-      Vector color =
-          TraceRay(scene, origin, direction, 1, INF, recursion_limit);
+      Vector color = render_subpixel(scene, direction, x, y, recursion_limit);
 
       color = ClampColor(color);
       canvas.plot(color);
@@ -76,6 +75,10 @@ void Camera::render_scene(Canvas &canvas, Scene &scene,
   }
 
   canvas.close();
+}
+
+Vector Camera::render_subpixel(Scene &scene, Vector direction, int x, int y, unsigned short recursion_limit) {
+  return TraceRay(scene, origin, direction, 1, INF, recursion_limit);
 }
 
 void Camera::render_animation(Canvas &canvas, Scene &scene,
