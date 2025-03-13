@@ -17,9 +17,9 @@ int main() {
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
   Camera camera;
 
-  unsigned short recursion_limit = 5;
   // camera.render_animation(canvas, scene, recursion_limit, 30, "roll");
-  camera.render_scene(canvas, scene, 3);
+  unsigned short recurr_lim = 10;
+  camera.render_scene(canvas, scene, recurr_lim);
 
   return 1;
 }

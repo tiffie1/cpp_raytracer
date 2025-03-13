@@ -12,10 +12,17 @@ double linear_map(double input, double input_min, double input_max,
 double fn(double x) { return 1 / (pow(x, 5)); }
 
 int main() {
-  double temp;
-  for (double i = 0; i < 10; i++) {
-    temp = linear_map(i, 0, 10, 1, 3);
-    cout << temp << endl;
-    cout << fn(temp);
+  float range = 0.1;
+  float values[3] = {-range, 0, range};
+
+  unsigned short iter = 0;
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      float off_x = values[i];
+      float off_y = values[j];
+
+      cout << "x: " << off_x << " " << "y: " << off_y << endl;
+      cout << "iter: " << iter++ << endl << endl; // Action
+    }
   }
 }

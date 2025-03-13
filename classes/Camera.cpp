@@ -3,6 +3,9 @@
 #include "Engine.h"
 #include "Inf.h"
 #include "Scene.h"
+#include "Vector.h"
+#include <array>
+#include <cmath>
 #include <math.h>
 
 Camera::Camera() : origin(Vector()) { rotate(0, 0, 0); }
@@ -66,8 +69,7 @@ void Camera::render_scene(Canvas &canvas, Scene &scene,
        y >= -floor(canvas.getHeight() / 2); y--) {
     for (int x = (-floor(canvas.getWidth() / 2));
          x < floor(canvas.getWidth() / 2); x++) {
-      Vector direction = CanvasToViewPort(canvas, x, y);
-      Vector color = render_subpixel(scene, direction, x, y, recursion_limit);
+      Vector color = render_subpixel(canvas, scene, x, y, recursion_limit);
 
       color = ClampColor(color);
       canvas.plot(color);
@@ -77,8 +79,42 @@ void Camera::render_scene(Canvas &canvas, Scene &scene,
   canvas.close();
 }
 
-Vector Camera::render_subpixel(Scene &scene, Vector direction, int x, int y, unsigned short recursion_limit) {
-  return TraceRay(scene, origin, direction, 1, INF, recursion_limit);
+Vector Camera::render_subpixel(Canvas &canvas, Scene &scene, int x, int y,
+                               unsigned short recursion_limit) {
+  Vector colors[25];
+  float range = 0.1;
+  float off_x, off_y;
+  float values[5] = {-range*2, -range, 0, range, range*2};
+  unsigned short iter = 0;
+
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      off_x = values[i];
+      off_y = values[j];
+
+      Vector direction = CanvasToViewPort(canvas, x + off_x, y + off_y);
+
+      colors[iter++] =
+          TraceRay(scene, origin, direction, 1, INF, recursion_limit);
+    }
+  }
+
+  double r_acc = 0;
+  double g_acc = 0;
+  double b_acc = 0;
+
+  for (int i = 0; i < 25; i++) {
+    r_acc += colors[i].x;
+    g_acc += colors[i].y;
+    b_acc += colors[i].z;
+  }
+
+  // Mean
+  double red = r_acc / 25;
+  double green = g_acc / 25;
+  double blue = b_acc / 25;
+
+  return Vector(red, green, blue);
 }
 
 void Camera::render_animation(Canvas &canvas, Scene &scene,
