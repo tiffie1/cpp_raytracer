@@ -18,6 +18,7 @@ The capabilities of the engine thus far.
 ## In-Progress Features
 These features, in no particular order, are some of the improvements that I wish to implement to the engine.
 
+- [ ] Improved memory managment for scalability
 - [ ] Cache storage of recurring calculations.
 - [ ] Refraction.
 - [ ] Transparent objects.
