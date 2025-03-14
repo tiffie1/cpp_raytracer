@@ -1,7 +1,7 @@
 # Simple C++ Raytracer 🟥🟩🟦
 This is a simple raytracer made from scratch in C++. This repository is meant as a place to keep track of the changes made to the engine, as there are a lot of things that are planned to be added.
 
-![Basic Render](output/images/super_sampling_basic.png)
+![Basic Render](images/super_sampling_basic.png)
 
 ## Implemented Features
 The capabilities of the engine thus far.
