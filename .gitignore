@@ -7,3 +7,5 @@ exec
 exec_test
 
 other/
+
+.vscode/
