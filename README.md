@@ -7,7 +7,7 @@ This is a simple raytracer made from scratch in C++. This repository is meant as
 The capabilities of the engine thus far.
 
 - Raytracing engine that renders images in Portable PixMap format (PPM).
-- Rendering of spheres and planes (planes WIP).
+- Rendering of spheres and planes.
 - Light sources.
 - Specular and Diffused reflection.
 - Full reflections with adjustable recursion depth.
@@ -15,7 +15,7 @@ The capabilities of the engine thus far.
 - Shadows.
 - Supersampling anti-aliasing.
 
-## In-Progress Features
+## Future Features
 These features, in no particular order, are some of the improvements that I wish to implement to the engine.
 
 - [ ] Improved memory managment for scalability
