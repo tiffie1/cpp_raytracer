@@ -9,10 +9,12 @@ ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
   const Sphere *closest_object = nullptr;
 
   std::array<double, 2> t;
+  double direction_dot = direction.dot(direction);
+
   for (unsigned short i = 0; i < scene.objects.size(); i++) {
     const Sphere *object = scene.objects[i];
 
-    t = object->intersect(origin, direction);
+    t = object->intersect(origin, direction, direction_dot);
 
     if ((t_min <= t[0] && t[0] <= t_max) && (t[0] < closest_t)) {
       closest_t = t[0];

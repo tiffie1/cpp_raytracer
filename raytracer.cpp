@@ -25,7 +25,7 @@ int main() {
   unsigned short recurr_lim = 10;
 
   cout << "Rendering starting:" << endl;
-  for (unsigned short i = 0; i < 10; i++) {
+  for (unsigned short i = 0; i < 1; i++) {
     start = high_resolution_clock::now();
 
     camera.render_scene(canvas, scene, recurr_lim);

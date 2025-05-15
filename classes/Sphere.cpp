@@ -1,6 +1,5 @@
 #include "Sphere.h"
 #include "Inf.h"
-#include <Vector.h>
 
 Sphere::Sphere() {
   center = Vector(0, 0, 0);
@@ -35,34 +34,34 @@ double Sphere::getSpecular() const { return specular; }
 double Sphere::getReflective() const { return reflective; }
 bool Sphere::is_defined() const { return is_valid; }
 
-std::array<double, 2> Sphere::intersect(Vector origin, Vector direction) const {
-  Vector OC;
-  double OC_dot;
+std::array<double, 2> Sphere::intersect(Vector origin, Vector direction,
+                                        double direction_dot) const {
+  double a = direction_dot;
+  double b, c;
 
   if (origin == Vector(0, 0, 0)) {
-    OC = offset;
-    OC_dot = offset_dot;
+    b = 2 * (offset.dot(direction));
+    c = offset_dot - square_radius;
   } else {
-    OC = origin - center;
-    OC_dot = OC.dot(OC);
+    Vector OC = origin - center;
+    b = 2 * OC.dot(direction);
+    c = OC.dot(OC) - square_radius;
   }
-
-  double a = direction.dot(direction);
-  double b = 2 * (OC.dot(direction));
-  double c = OC_dot - square_radius;
 
   double discriminant = b * b - 4 * a * c;
 
-  if (discriminant < 0) {
-    const std::array<double, 2> result = {INF, INF};
-    return result;
+  if (discriminant < 0)
+    return {INF, INF};
+  else {
+    double double_a = 2 * a;
+    discriminant = sqrt(discriminant);
+    b = -b;
+
+    double t1 = (b + discriminant) / double_a;
+    double t2 = (b - discriminant) / double_a;
+
+    return {t1, t2};
   }
-
-  double t1 = (-b + sqrt(discriminant)) / (2 * a);
-  double t2 = (-b - sqrt(discriminant)) / (2 * a);
-
-  const std::array<double, 2> result = {t1, t2};
-  return result;
 }
 
 Vector Sphere::normal(Vector intersect_point) const {

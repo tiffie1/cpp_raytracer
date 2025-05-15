@@ -33,7 +33,8 @@ public:
 
   Sphere &operator=(const Sphere &other);
 
-  std::array<double, 2> intersect(Vector origin, Vector direction) const;
+  std::array<double, 2> intersect(Vector origin, Vector direction, double direction_dot) const;
+
   Vector normal(Vector intersect_point) const;
   void shift(Vector displacement_vec);
 
