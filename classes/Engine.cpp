@@ -42,9 +42,10 @@ double ComputeLighting(Scene &scene, Vector intersect_point, Vector normal_vec,
   for (unsigned int i = 0; i < scene.lights.size(); i++) {
     const Light &light = scene.lights[i];
 
-    if (light.getType() == "ambient")
+    if (light.getType() == "ambient") {
       intense_cumm += light.getIntensity();
-    else {
+      continue;
+    } else {
       if (light.getType() == "point") {
         light_vec = light.getBehaviour() - intersect_point;
         t_max = 1;

@@ -86,3 +86,22 @@ current_data <- c(
 
 cat("Mean:", mean(current_data))
 hist(current_data)
+
+vector_data = c(
+  17.161,
+  17.137,
+  17.187,
+  17.175,
+  17.245,
+  17.093,
+  17.405,
+  17.354,
+  17.226,
+  17.254,
+  17.302,
+  17.206,
+  17.206
+)
+
+cat("Mean:", mean(vector_data))
+hist(vector_data)
