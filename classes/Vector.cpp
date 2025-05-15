@@ -54,8 +54,7 @@ double Vector::dot(const Vector &other) const {
 
 double Vector::norm() { return sqrt(x * x + y * y + z * z); }
 
-std::ostream &operator<<(std::ostream &stream,
-                                        const Vector &vector) {
+std::ostream &operator<<(std::ostream &stream, const Vector &vector) {
   stream << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
   return stream;
 }

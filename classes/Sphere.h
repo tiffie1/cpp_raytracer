@@ -1,11 +1,10 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "Object3D.h"
 #include "Vector.h"
 #include <fstream>
 
-class Sphere : public Object3D {
+class Sphere {
 private:
   Vector center;
   double radius;

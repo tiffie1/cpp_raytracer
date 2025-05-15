@@ -1,11 +1,10 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "Object3D.h"
 #include "Scene.h"
 #include "Vector.h"
 
-std::pair<const Object3D *, double>
+std::pair<const Sphere *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
                     double t_max);
 

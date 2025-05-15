@@ -84,7 +84,7 @@ Vector Camera::render_subpixel(Canvas &canvas, Scene &scene, int x, int y,
   Vector colors[25];
   float range = 0.1;
   float off_x, off_y;
-  float values[5] = {-range*2, -range, 0, range, range*2};
+  float values[5] = {-range * 2, -range, 0, range, range * 2};
   unsigned short iter = 0;
 
   for (int i = 0; i < 5; i++) {

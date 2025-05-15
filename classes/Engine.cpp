@@ -2,15 +2,15 @@
 #include "Inf.h"
 #include "Light.h"
 
-std::pair<const Object3D *, double>
+std::pair<const Sphere *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
                     double t_max) {
   double closest_t = INF;
-  const Object3D *closest_object = nullptr;
+  const Sphere *closest_object = nullptr;
 
   std::array<double, 2> t;
   for (unsigned short i = 0; i < scene.objects.size(); i++) {
-    const Object3D *object = scene.objects[i];
+    const Sphere *object = scene.objects[i];
 
     t = object->intersect(origin, direction);
 
@@ -51,9 +51,9 @@ double ComputeLighting(Scene &scene, Vector intersect_point, Vector normal_vec,
         t_max = INF;
       }
 
-      std::pair<const Object3D *, double> result =
+      std::pair<const Sphere *, double> result =
           ClosestIntersection(scene, intersect_point, light_vec, 0.001, t_max);
-      const Object3D *shadow_sphere = result.first;
+      const Sphere *shadow_sphere = result.first;
 
       if (shadow_sphere != nullptr)
         continue;
@@ -86,9 +86,9 @@ Vector ReflectRay(Vector reflect_vec, Vector normal_vec) {
 
 Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
                 double t_max, int recursion_depth) {
-  std::pair<const Object3D *, double> result =
+  std::pair<const Sphere *, double> result =
       ClosestIntersection(scene, origin, direction, t_min, t_max);
-  const Object3D *closest_object = result.first;
+  const Sphere *closest_object = result.first;
   double closest_t = result.second;
 
   if (closest_object == nullptr)
