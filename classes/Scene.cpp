@@ -4,16 +4,14 @@
 #include <array>
 #include <set>
 
-std::map<double, double> calculate_squares(std::array<Sphere *, 7> &array) {
+std::map<double, double> calculate_squares(std::vector<Sphere *> &objects) {
   std::set<double> radii;
+  std::map<double, double> result;
 
-  for (unsigned short i = 0; i < 7; i++) {
-    if (Sphere *a = dynamic_cast<Sphere *>(array[i])) {
-      radii.insert(a->getRadius());
-    }
+  for (Sphere *object : objects) {
+    radii.insert(object->getRadius());
   }
 
-  std::map<double, double> result;
   for (double r : radii) {
     result[r] = r * r;
   }
@@ -26,28 +24,22 @@ Scene::Scene(std::string scene_identify, Vector background_color)
   bg_color = background_color;
 
   if (scene_identification == "basic") {
-    std::array<Sphere *, 7> objects_arr = {
-        {new Sphere(Vector(0, -1, 3), 1, Vector(255, 0, 0), 500, 0.2),
-         new Sphere(Vector(2, 0, 4), 1, Vector(0, 255, 0), 500, 0.3),
-         new Sphere(Vector(-2, 0, 4), 1, Vector(0, 0, 255), 500, 0.5),
-         new Sphere(Vector(0, -5001, 0), 5000, Vector(255, 255, 0), 1000, 0.1),
-         new Sphere(), new Sphere(), new Sphere()}};
-    objects = objects_arr;
 
-    std::array<Light, 3> lights_arr = {
-        {Light("ambient", 0.2), Light("point", 0.6, Vector(2, 1, 0)),
-         Light("directional", 0.2, Vector(1, 4, 4))}};
+    objects.push_back(
+        new Sphere(Vector(0, -1, 3), 1, Vector(255, 0, 0), 500, 0.2));
+    objects.push_back(
+        new Sphere(Vector(2, 0, 4), 1, Vector(0, 255, 0), 500, 0.3));
+    objects.push_back(
+        new Sphere(Vector(-2, 0, 4), 1, Vector(0, 0, 255), 500, 0.5));
+    objects.push_back(
+        new Sphere(Vector(0, -5001, 0), 5000, Vector(255, 255, 0), 1000, 0.1));
 
-    lights = lights_arr;
-  } else {
-    std::array<Sphere *, 7> objects_arr = {{}};
-    std::array<Light, 3> lights_arr = {{}};
+    lights.push_back(Light("ambient", 0.2));
+    lights.push_back(Light("point", 0.6, Vector(2, 1, 0)));
+    lights.push_back(Light("directional", 0.2, Vector(1, 4, 4)));
 
-    objects = objects_arr;
-    lights = lights_arr;
+    square_radii = calculate_squares(objects);
   }
-
-  square_radii = calculate_squares(objects);
 }
 
 Scene::~Scene() {}

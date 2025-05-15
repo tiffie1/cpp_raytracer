@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Sphere.h"
 #include "Vector.h"
+#include <vector>
 #include <map>
 #include <string>
 
@@ -14,8 +15,8 @@ private:
   std::map<double, double> square_radii;
 
 public:
-  std::array<Light, 3> lights;
-  std::array<Sphere *, 7> objects;
+  std::vector<Light> lights;
+  std::vector<Sphere *> objects;
 
   Scene(std::string scene_identify, Vector background_color);
   ~Scene();
