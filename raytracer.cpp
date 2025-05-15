@@ -2,10 +2,16 @@
 #include "classes/Canvas.h"
 #include "classes/Scene.h"
 #include "classes/Vector.h"
+#include <iostream>
+#include <chrono>
+
 
 using namespace std;
+using namespace std::chrono;
 
 int main() {
+  auto start = high_resolution_clock::now();
+
   const double CANVAS_WIDTH = 500;
   const double CANVAS_HEIGHT = 500;
   const double VIEWPORT_WIDTH = 1;
@@ -30,6 +36,10 @@ int main() {
   // camera.render_animation(canvas, scene, recursion_limit, 30, "roll");
 
   camera.render_scene(canvas, scene, recurr_lim);
+  auto end = high_resolution_clock::now();
+  auto duration = duration_cast<milliseconds>(end - start);
+
+  cout << "Scene rendered.\nTotal running time: " << static_cast<double>(duration.count())/1000 << "s." << endl;
 
   return 1;
 }
