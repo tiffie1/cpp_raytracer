@@ -1,9 +1,11 @@
-#include "Inf.h"
 #include "Sphere.h"
+#include "Inf.h"
+#include <Vector.h>
 
 Sphere::Sphere() {
   center = Vector(0, 0, 0);
   radius = 0;
+  square_radius = 0;
   color = Vector(0, 0, 0);
   specular = 0;
   reflective = 0;
@@ -12,10 +14,13 @@ Sphere::Sphere() {
 
 Sphere::~Sphere() {}
 
-Sphere::Sphere(Vector center_val, double radius_val, Vector color_vec,
-               float specular_val, float reflect_val) {
+Sphere::Sphere(Vector camera_origin, Vector center_val, double radius_val,
+               Vector color_vec, float specular_val, float reflect_val) {
   center = center_val;
+  offset = camera_origin - center;
+  offset_dot = offset.dot(offset);
   radius = radius_val;
+  square_radius = radius * radius;
   color = color_vec;
   specular = specular_val;
   reflective = reflect_val;
@@ -23,6 +28,7 @@ Sphere::Sphere(Vector center_val, double radius_val, Vector color_vec,
 }
 
 Vector Sphere::getCenter() const { return center; }
+Vector Sphere::getOffset() const { return offset; }
 double Sphere::getRadius() const { return radius; }
 Vector Sphere::getColor() const { return color; }
 double Sphere::getSpecular() const { return specular; }
@@ -30,11 +36,20 @@ double Sphere::getReflective() const { return reflective; }
 bool Sphere::is_defined() const { return is_valid; }
 
 std::array<double, 2> Sphere::intersect(Vector origin, Vector direction) const {
-  Vector coord_offset = origin - center;
+  Vector OC;
+  double OC_dot;
+
+  if (origin == Vector(0, 0, 0)) {
+    OC = offset;
+    OC_dot = offset_dot;
+  } else {
+    OC = origin - center;
+    OC_dot = OC.dot(OC);
+  }
 
   double a = direction.dot(direction);
-  double b = 2 * (coord_offset.dot(direction));
-  double c = coord_offset.dot(coord_offset) - (radius * radius);
+  double b = 2 * (OC.dot(direction));
+  double c = OC_dot - square_radius;
 
   double discriminant = b * b - 4 * a * c;
 

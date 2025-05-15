@@ -48,13 +48,20 @@ Vector &Vector::operator=(const Vector &other) {
   return *this;
 }
 
-double Vector::dot(const Vector &other) const {
-  return x * other.x + y * other.y + z * other.z;
+bool Vector::operator==(const Vector &other) {
+  if (x == other.x && y == other.y && z == other.z)
+    return true;
+  else
+    return false;
 }
 
-double Vector::norm() { return sqrt(x * x + y * y + z * z); }
+  double Vector::dot(const Vector &other) const {
+    return x * other.x + y * other.y + z * other.z;
+  }
 
-std::ostream &operator<<(std::ostream &stream, const Vector &vector) {
-  stream << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
-  return stream;
-}
+  double Vector::norm() { return sqrt(x * x + y * y + z * z); }
+
+  std::ostream &operator<<(std::ostream &stream, const Vector &vector) {
+    stream << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
+    return stream;
+  }

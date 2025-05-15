@@ -7,7 +7,10 @@
 class Sphere {
 private:
   Vector center;
+  Vector offset;
+  double offset_dot;
   double radius;
+  double square_radius;
   Vector color;
   double specular;
   double reflective;
@@ -15,12 +18,14 @@ private:
 
 public:
   Sphere();
-  Sphere(Vector center_val, double radius_val, Vector color_vec,
+  Sphere(Vector camera_origin, Vector center_val, double radius_val, Vector color_vec,
          float specular_val, float reflect_val);
   ~Sphere();
 
   Vector getCenter() const;
+  Vector getOffset() const;
   double getRadius() const;
+  double getSquaredRadius() const;
   Vector getColor() const;
   double getSpecular() const;
   double getReflective() const;

@@ -3,9 +3,12 @@
 animations/.DS_Store
 
 exec
-
 exec_test
+exec_debug
+exec_debug.dSYM/
 
 other/
 
 .vscode/
+
+

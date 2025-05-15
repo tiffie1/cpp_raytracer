@@ -18,13 +18,14 @@ int main() {
   const double VIEWPORT_HEIGHT = 1;
   const double VIEWPORT_DISTANCE = 1;
 
-  Scene scene("basic", Vector(0, 0, 0));
+  Camera camera;
+  Scene scene(camera.getOrigin(), "basic", Vector(0, 0, 0));
   Canvas canvas("frame.ppm", CANVAS_HEIGHT, CANVAS_WIDTH, VIEWPORT_HEIGHT,
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
-  Camera camera;
   unsigned short recurr_lim = 10;
 
-  for (unsigned short i = 0; i < 1; i++) {
+  cout << "Rendering starting:" << endl;
+  for (unsigned short i = 0; i < 10; i++) {
     start = high_resolution_clock::now();
 
     camera.render_scene(canvas, scene, recurr_lim);

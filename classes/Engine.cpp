@@ -88,6 +88,7 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
                 double t_max, int recursion_depth) {
   std::pair<const Sphere *, double> result =
       ClosestIntersection(scene, origin, direction, t_min, t_max);
+
   const Sphere *closest_object = result.first;
   double closest_t = result.second;
 

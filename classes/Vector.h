@@ -18,6 +18,7 @@ public:
   Vector operator*(const Vector &other);
   Vector operator*(const double &scalar);
   Vector &operator=(const Vector &other);
+  bool operator==(const Vector & other);
 
   double dot(const Vector &other) const;
   double norm();
