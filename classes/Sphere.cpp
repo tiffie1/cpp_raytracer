@@ -38,7 +38,7 @@ bool Sphere::is_defined() const { return is_valid; }
 double Sphere::getRefractiveIdx() const { return refractive_idx; }
 double Sphere::getTransparency() const { return transparency; }
 
-Vector Sphere::normal(Vector intersect_point) const {
+Vector Sphere::normal(Vector &intersect_point) const {
   return (intersect_point - center) / radius;
 }
 

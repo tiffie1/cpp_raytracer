@@ -32,7 +32,7 @@ Scene::Scene(Vector camera_origin, std::string scene_identify,
 Scene::~Scene() {
   delete recently_shaded; 
 
-  for (Sphere * sphere : objects)
+  for (Object3D * sphere : objects)
     delete sphere;
 
   objects.clear();

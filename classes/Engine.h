@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "Vector.h"
 
-std::pair<const Sphere *, double>
+std::pair<const Object3D *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
                     double t_max);
 

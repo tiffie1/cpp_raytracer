@@ -3,9 +3,10 @@
 
 #include "Inf.h"
 #include "Vector.h"
+#include "Object3D.h"
 #include <array>
 
-class Sphere {
+class Sphere: public Object3D {
 private:
   Vector center;
   Vector offset;
@@ -34,14 +35,20 @@ public:
   double getSpecular() const;
   double getReflective() const;
   bool is_defined() const;
-  double getRefractiveIdx() const ;
-  double getTransparency() const ;
+  double getRefractiveIdx() const;
+  double getTransparency() const;
 
   Sphere &operator=(const Sphere &other);
 
-  inline std::array<double, 2> intersect(Vector &origin, Vector &direction,
-                                         double direction_dot) const {
-    double a = direction_dot;
+  Vector normal(Vector &intersect_point) const;
+  void shift(Vector displacement_vec);
+  void rotate(double yaw, double pitch, double roll) {}
+
+  friend std::ostream &operator<<(std::ostream &stream, const Sphere &sphere);
+
+  inline std::array<double, 2> intersect(Vector &origin,
+                                         Vector &direction) const {
+    double a = direction.dot(direction);
     double b, c;
 
     if (origin == Vector(0, 0, 0)) {
@@ -65,11 +72,6 @@ public:
       return {t1, t2};
     }
   }
-
-  Vector normal(Vector intersect_point) const;
-  void shift(Vector displacement_vec);
-
-  friend std::ostream &operator<<(std::ostream &stream, const Sphere &sphere);
 };
 
 #endif // !SPHERE_H

@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Sphere.h"
 #include "Vector.h"
+#include "Object3D.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -21,7 +22,7 @@ private:
 
 public:
   std::vector<Light> lights;
-  std::vector<Sphere *> objects;
+  std::vector<Object3D *> objects;
   ShadowCacheEntry * recently_shaded;
 
   Scene(Vector camera_origin, std::string scene_identify,

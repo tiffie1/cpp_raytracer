@@ -2,22 +2,22 @@
 #include "Inf.h"
 #include "Light.h"
 #include "Scene.h"
+#include "Object3D.h"
 #include <cstdlib>
-#include <iostream>
 
-std::pair<const Sphere *, double>
+std::pair<const Object3D *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
                     double t_max) {
   double closest_t = INF;
-  const Sphere *closest_object = nullptr;
+  const Object3D *closest_object = nullptr;
 
   std::array<double, 2> t;
-  double direction_dot = direction.dot(direction);
+  //double direction_dot = direction.dot(direction);
 
   for (unsigned short i = 0; i < scene.objects.size(); i++) {
-    const Sphere *object = scene.objects[i];
+    const Object3D *object = scene.objects[i];
 
-    t = object->intersect(origin, direction, direction_dot);
+    t = object->intersect(origin, direction);
 
     if ((t_min <= t[0] && t[0] <= t_max) && (t[0] < closest_t)) {
       closest_t = t[0];
@@ -43,9 +43,9 @@ inline void calculate_spec_diff(Scene &scene, const Light &light,
   Vector reflect_vec;
 
   //  Trace ray from point of object intersection to light direction.
-  std::pair<const Sphere *, double> result =
+  std::pair<const Object3D *, double> result =
       ClosestIntersection(scene, intersect_point, light_vec, 0.001, t_max);
-  const Sphere *shadow_sphere = result.first;
+  const Object3D *shadow_sphere = result.first;
 
   // There is a block for the light, and skip diff and spec.
   if (shadow_sphere != nullptr) {
@@ -170,10 +170,10 @@ bool Refract(Vector &incident, Vector &normal, double ior, Vector &refracted) {
 
 Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
                 double t_max, int recursion_depth) {
-  std::pair<const Sphere *, double> result =
+  std::pair<const Object3D *, double> result =
       ClosestIntersection(scene, origin, direction, t_min, t_max);
 
-  const Sphere *closest_object = result.first;
+  const Object3D *closest_object = result.first;
   double closest_t = result.second;
 
   if (closest_object == nullptr)
