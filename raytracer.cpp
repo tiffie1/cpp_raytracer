@@ -12,8 +12,8 @@ int main() {
   time_point<high_resolution_clock> start, end;
   microseconds duration;
 
-  const double CANVAS_WIDTH = 500;
-  const double CANVAS_HEIGHT = 500;
+  const double CANVAS_WIDTH = 2000;
+  const double CANVAS_HEIGHT = 2000;
   const double VIEWPORT_WIDTH = 1;
   const double VIEWPORT_HEIGHT = 1;
   const double VIEWPORT_DISTANCE = 1;
@@ -23,6 +23,9 @@ int main() {
   Canvas canvas("frame.ppm", CANVAS_HEIGHT, CANVAS_WIDTH, VIEWPORT_HEIGHT,
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
   unsigned short recurr_lim = 10;
+
+  //camera.move(2, 0, 0);
+  //camera.rotate(8, 0, 0);
 
   cout << "Rendering starting:" << endl;
   for (unsigned short i = 0; i < 1; i++) {
