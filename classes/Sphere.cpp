@@ -1,5 +1,4 @@
 #include "Sphere.h"
-#include "Inf.h"
 
 Sphere::Sphere() {
   center = Vector(0, 0, 0);
@@ -14,7 +13,8 @@ Sphere::Sphere() {
 Sphere::~Sphere() {}
 
 Sphere::Sphere(Vector camera_origin, Vector center_val, double radius_val,
-               Vector color_vec, float specular_val, float reflect_val) {
+               Vector color_vec, float specular_val, float reflect_val,
+               double refractive_idx_val, double transparency_val) {
   center = center_val;
   offset = camera_origin - center;
   offset_dot = offset.dot(offset);
@@ -24,6 +24,8 @@ Sphere::Sphere(Vector camera_origin, Vector center_val, double radius_val,
   specular = specular_val;
   reflective = reflect_val;
   is_valid = true;
+  refractive_idx = refractive_idx_val;
+  transparency = transparency_val;
 }
 
 Vector Sphere::getCenter() const { return center; }
@@ -33,36 +35,8 @@ Vector Sphere::getColor() const { return color; }
 double Sphere::getSpecular() const { return specular; }
 double Sphere::getReflective() const { return reflective; }
 bool Sphere::is_defined() const { return is_valid; }
-
-std::array<double, 2> Sphere::intersect(Vector origin, Vector direction,
-                                        double direction_dot) const {
-  double a = direction_dot;
-  double b, c;
-
-  if (origin == Vector(0, 0, 0)) {
-    b = 2 * (offset.dot(direction));
-    c = offset_dot - square_radius;
-  } else {
-    Vector OC = origin - center;
-    b = 2 * OC.dot(direction);
-    c = OC.dot(OC) - square_radius;
-  }
-
-  double discriminant = b * b - 4 * a * c;
-
-  if (discriminant < 0)
-    return {INF, INF};
-  else {
-    double double_a = 2 * a;
-    discriminant = sqrt(discriminant);
-    b = -b;
-
-    double t1 = (b + discriminant) / double_a;
-    double t2 = (b - discriminant) / double_a;
-
-    return {t1, t2};
-  }
-}
+double Sphere::getRefractiveIdx() const { return refractive_idx; }
+double Sphere::getTransparency() const { return transparency; }
 
 Vector Sphere::normal(Vector intersect_point) const {
   return (intersect_point - center) / radius;
