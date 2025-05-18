@@ -18,10 +18,10 @@ The capabilities of the engine thus far.
 ## Future Features
 These features, in no particular order, are some of the improvements that I wish to implement to the engine.
 
-- [ ] Improved memory managment for scalability
-- [ ] Cache storage of recurring calculations.
-- [ ] Refraction.
-- [ ] Transparent objects.
+- [x] Improved memory managment for scalability
+- [x] Cache storage of recurring calculations.
+- [x] Refraction.
+- [x] Transparent objects.
 - [ ] Shadow-rendering optimization.
 - [ ] Bounding Volume Hierarchies.
 - [ ] Options for subsampling.
