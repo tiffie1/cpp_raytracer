@@ -11,7 +11,7 @@
 struct ShadowCacheEntry {
   Vector point;
   Vector light_dir;
-  bool result;
+  bool hit_shadow;
 };
 
 class Scene {
@@ -22,7 +22,7 @@ private:
 public:
   std::vector<Light> lights;
   std::vector<Sphere *> objects;
-  std::vector<ShadowCacheEntry> shadow_cache;
+  ShadowCacheEntry * recently_shaded;
 
   Scene(Vector camera_origin, std::string scene_identify,
         Vector background_color);

@@ -1,6 +1,9 @@
 #include "Engine.h"
 #include "Inf.h"
 #include "Light.h"
+#include "Scene.h"
+#include <cstdlib>
+#include <iostream>
 
 std::pair<const Sphere *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
@@ -29,7 +32,56 @@ ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
   return std::make_pair(closest_object, closest_t);
 }
 
-double EPSILON = 0.001;
+inline void calculate_spec_diff(Scene &scene, const Light &light,
+                                Vector &intersect_point, Vector &light_vec,
+                                Vector &normal_vec, Vector &view_vec,
+                                double &t_max, float &spec_val,
+                                double &intense_cumm) {
+
+  double n_dot_l;
+  double r_dot_v;
+  Vector reflect_vec;
+
+  //  Trace ray from point of object intersection to light direction.
+  std::pair<const Sphere *, double> result =
+      ClosestIntersection(scene, intersect_point, light_vec, 0.001, t_max);
+  const Sphere *shadow_sphere = result.first;
+
+  // There is a block for the light, and skip diff and spec.
+  if (shadow_sphere != nullptr) {
+    scene.recently_shaded->point = intersect_point;
+    scene.recently_shaded->light_dir = light_vec;
+    scene.recently_shaded->hit_shadow = true;
+  } else {
+    n_dot_l = normal_vec.dot(light_vec);
+    // Diffused
+    if (n_dot_l > 0)
+      intense_cumm += light.getIntensity() * n_dot_l /
+                      (normal_vec.norm() * light_vec.norm());
+
+    // Specular
+    if (spec_val != -1) {
+      reflect_vec = normal_vec * 2 * normal_vec.dot(light_vec) - light_vec;
+
+      r_dot_v = reflect_vec.dot(view_vec);
+      if (r_dot_v > 0)
+        intense_cumm +=
+            light.getIntensity() *
+            pow((r_dot_v / (reflect_vec.norm() * view_vec.norm())), spec_val);
+    }
+
+    scene.recently_shaded->point = intersect_point;
+    scene.recently_shaded->light_dir = light_vec;
+    scene.recently_shaded->hit_shadow = false;
+  }
+}
+
+inline Vector normalize(Vector &v) {
+  double len = v.norm();
+  return (len > 0.0) ? (v / len) : Vector(0, 0, 0);
+}
+
+double EPSILON = 0.0001;
 
 double ComputeLighting(Scene &scene, Vector intersect_point, Vector normal_vec,
                        Vector view_vec, float spec_val) {
@@ -57,34 +109,31 @@ double ComputeLighting(Scene &scene, Vector intersect_point, Vector normal_vec,
         t_max = INF;
       }
 
-      //  Trace ray from point of object intersection to light direction.
-      std::pair<const Sphere *, double> result =
-          ClosestIntersection(scene, intersect_point, light_vec, 0.001, t_max);
-      const Sphere *shadow_sphere = result.first;
+      calculate_spec_diff(scene, light, intersect_point, light_vec,
+                          normal_vec, view_vec, t_max, spec_val,
+                          intense_cumm);
 
-      // There is a block for the light, and intense_cumm is not incremented.
-      if (shadow_sphere != nullptr) {
-        // scene.shadow_cache.push_back({intersect_point, light_vec, false});
-        continue;
+      /*
+      Vector L1 = normalize(light_vec);
+      Vector L0 = normalize(scene.recently_shaded->light_dir);
+      double angle_cos = L1.dot(L0);
+
+      if (((scene.recently_shaded->point - intersect_point).norm() <=
+           EPSILON) &&
+          (angle_cos) <= 0.9999) {
+        if (scene.recently_shaded->hit_shadow)
+          continue;
+        else
+          calculate_spec_diff(scene, light, intersect_point, light_vec,
+                              normal_vec, view_vec, t_max, spec_val,
+                              intense_cumm);
+      } else {
+        //std::cout << "Not closeby." << std::endl;
+        calculate_spec_diff(scene, light, intersect_point, light_vec,
+                            normal_vec, view_vec, t_max, spec_val,
+                            intense_cumm);
       }
-
-      n_dot_l = normal_vec.dot(light_vec);
-      // Diffused
-      if (n_dot_l > 0)
-        intense_cumm += light.getIntensity() * n_dot_l /
-                        (normal_vec.norm() * light_vec.norm());
-
-      // Specular
-      if (spec_val != -1) {
-        reflect_vec = normal_vec * 2 * normal_vec.dot(light_vec) - light_vec;
-
-        r_dot_v = reflect_vec.dot(view_vec);
-        if (r_dot_v > 0)
-          intense_cumm +=
-              light.getIntensity() *
-              pow((r_dot_v / (reflect_vec.norm() * view_vec.norm())), spec_val);
-      }
-
+      */
     }
   }
 
@@ -114,7 +163,7 @@ bool Refract(Vector &incident, Vector &normal, double ior, Vector &refracted) {
     return false; // Total internal reflection
   } else {
     refracted = incident * eta + n * (eta * cosi - sqrt(k));
-    //refracted.y = -refracted.y;
+    // refracted.y = -refracted.y;
     return true;
   }
 }
@@ -161,7 +210,6 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
 
   if (transparency > 0) {
     Vector refracted_dir;
-    //normal_vec = -normal_vec;
     bool success = Refract(direction, normal_vec, ior, refracted_dir);
 
     if (success) {
@@ -169,12 +217,6 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
                                         0.001, INF, recursion_depth - 1);
       result_color =
           result_color * (1 - transparency) + refracted_color * transparency;
-
-      /*
-      result_color = local_color * (1 - reflect_val - transparency) +
-                     reflected_color * reflect_val +
-                     refracted_color * transparency;
-      */
     }
   }
 

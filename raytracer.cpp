@@ -12,8 +12,8 @@ int main() {
   time_point<high_resolution_clock> start, end;
   microseconds duration;
 
-  const double CANVAS_WIDTH = 2000;
-  const double CANVAS_HEIGHT = 2000;
+  const double CANVAS_WIDTH = 500;
+  const double CANVAS_HEIGHT = 500;
   const double VIEWPORT_WIDTH = 1;
   const double VIEWPORT_HEIGHT = 1;
   const double VIEWPORT_DISTANCE = 1;
