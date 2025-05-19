@@ -210,5 +210,5 @@ void Camera::lookAt(const Vector &target) {
   double pitch = std::atan2(f.y, std::sqrt(f.x * f.x + f.z * f.z));
   double roll = std::atan2(r.y, u.y);
 
-  rotate(yaw, roll, pitch);
+  rotate(yaw, pitch, roll);
 }

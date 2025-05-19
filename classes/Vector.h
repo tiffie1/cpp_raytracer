@@ -22,6 +22,8 @@ public:
   bool operator==(const Vector &other);
   double &operator[](std::size_t i);
 
+  Vector operator*(double scalar) const;
+
   // 1) As a const member, callable on const or non‐const Vector:
   Vector operator-(const Vector &rhs) const {
     return Vector{x - rhs.x, y - rhs.y, z - rhs.z};
@@ -36,6 +38,7 @@ public:
   double norm();
   Vector normalized() const;
   Vector cross(const Vector &other) const;
+  Vector rotate(double yawDeg, double pitchDeg, double rollDeg) const;
   friend std::ostream &operator<<(std::ostream &stream, const Vector &vector);
 };
 

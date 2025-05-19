@@ -24,7 +24,9 @@ int main() {
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
   unsigned short recurr_lim = 10;
 
-  camera.render_animation(canvas, scene, 10, 80, "orbit");
+  camera.render_scene(canvas, scene, recurr_lim);
+
+  //camera.render_animation(canvas, scene, 10, 80, "orbit");
   /*
   //camera.move(2, 0, 0);
   //camera.rotate(8, 0, 0);
