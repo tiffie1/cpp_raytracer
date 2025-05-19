@@ -202,13 +202,16 @@ Vector Camera::CanvasToViewPort(Canvas &canvas, double x, double y) {
 }
 
 void Camera::lookAt(const Vector &target) {
-  Vector f = (target - origin).normalized();        // forward
-  Vector r = f.cross(Vector(0, 1, 0)).normalized(); // right
-  Vector u = r.cross(f);                            // up
+  Vector f = (target - origin).normalized();
+  Vector r = f.cross(Vector(0,1,0)).normalized();
+  Vector u = r.cross(f);
 
-  double yaw = std::atan2(f.x, f.z);
-  double pitch = std::atan2(f.y, std::sqrt(f.x * f.x + f.z * f.z));
-  double roll = std::atan2(r.y, u.y);
+  double yaw   = std::atan2(f.x,  f.z);
+  double pitch = std::atan2(f.y, std::sqrt(f.x*f.x + f.z*f.z));
 
-  rotate(yaw, pitch, roll);
+  double yawDeg   = yaw   * (180.0/M_PI);
+  double pitchDeg = pitch * (180.0/M_PI);
+
+  std::cout << "yaw: " << -yawDeg << "\npitch: " << pitchDeg << std::endl;
+  rotate(-yawDeg, 0.0, pitchDeg);
 }

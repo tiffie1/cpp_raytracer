@@ -12,8 +12,8 @@ int main() {
   time_point<high_resolution_clock> start, end;
   microseconds duration;
 
-  const double CANVAS_WIDTH = 500;
-  const double CANVAS_HEIGHT = 500;
+  const double CANVAS_WIDTH = 1000;
+  const double CANVAS_HEIGHT = 1000;
   const double VIEWPORT_WIDTH = 1;
   const double VIEWPORT_HEIGHT = 1;
   const double VIEWPORT_DISTANCE = 1;
@@ -24,6 +24,9 @@ int main() {
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
   unsigned short recurr_lim = 10;
 
+  camera.move(2, 0, 0);
+  camera.lookAt(Vector(-1, 0, 5));
+  //camera.rotate(21, 0, 0);
   camera.render_scene(canvas, scene, recurr_lim);
 
   //camera.render_animation(canvas, scene, 10, 80, "orbit");
