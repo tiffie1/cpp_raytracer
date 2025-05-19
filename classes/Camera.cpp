@@ -6,6 +6,7 @@
 #include "Vector.h"
 #include <array>
 #include <cmath>
+#include <iostream>
 #include <math.h>
 
 Camera::Camera() : origin(Vector()) { rotate(0, 0, 0); }
@@ -124,20 +125,62 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
   std::string file_path = "animations/" + anim_name + "/";
   std::string canvas_name =
       canvas.getName().substr(0, canvas.getName().find(".ppm"));
-  double temp;
 
-  for (unsigned int i = 0; i < frame_count; i++) {
-    canvas.setName(file_path + (canvas_name + std::to_string(i) + ".ppm"));
+  // Precompute orbit info
+  const Vector orbitCenter(0.0, 0.0, 5.0);
+  // record original offset from center
+  Vector origOffset = origin - orbitCenter;
+
+  // constant for a full circle
+  const double PI = 3.14159265358979323846;
+  const double TWO_PI = 2.0 * PI;
+
+  for (unsigned int i = 0; i < frame_count; ++i) {
+    // name this frame’s file
+    canvas.setName(file_path + canvas_name + std::to_string(i) + ".ppm");
+
+    // --- orbit case: reposition & rotate camera BEFORE rendering ---
+    //
+    if (anim_name == "orbit") {
+      // compute how far around the circle we are [0..2π)
+      double angle = TWO_PI * static_cast<double>(i) / frame_count;
+
+      // rotate the original offset around Y
+      Vector desiredOffset(
+          origOffset.x * cos(angle) - origOffset.z * sin(angle), origOffset.y,
+          origOffset.x * sin(angle) + origOffset.z * cos(angle));
+
+      // move the camera into position
+      Vector desiredPos = orbitCenter + desiredOffset;
+      Vector delta = desiredPos - origin;
+      move(delta.x, delta.y, delta.z);
+
+      // now orient it so it “looks at” the center
+      rotate(0, 0, 0);
+      Vector dir = (orbitCenter - origin).normalized();
+      double yaw = atan2(dir.x, dir.z);
+      double pitch = asin(dir.y);
+      double yawDeg = yaw * 180.0 / M_PI;
+      double pitchDeg = pitch * 180.0 / M_PI;
+      rotate(-yawDeg, 0.0, pitchDeg);
+
+      // lookAt(Vector(2, 0, 5));
+    }
+
+    // render this frame
     render_scene(canvas, scene, recursion_limit);
 
-    temp = linear_map(i, 0, frame_count, 1, 3);
+    // --- the existing object‐motion cases run *after* render ---
     if (anim_name == "roll") {
+      double temp = linear_map(i, 0, frame_count, 1, 3);
       scene.objects[1]->shift(Vector(fractional_function(temp, 5), 0, 0));
 
     } else if (anim_name == "rise") {
+      double temp = linear_map(i, 0, frame_count, 1, 3);
       scene.objects[1]->shift(Vector(0, fractional_function(temp, 5), 0));
 
     } else if (anim_name == "collide") {
+      double temp = linear_map(i, 0, frame_count, 1, 3);
       scene.objects[1]->shift(Vector(fractional_function(temp, 4), 0, 0));
       scene.objects[2]->shift(Vector(-fractional_function(temp, 4), 0, 0));
     }
@@ -156,4 +199,16 @@ Vector Camera::CanvasToViewPort(Canvas &canvas, double x, double y) {
          Vector(x * canvas.getV_Width() / canvas.getWidth(),
                 y * canvas.getV_Height() / canvas.getHeight(),
                 canvas.getV_Distance());
+}
+
+void Camera::lookAt(const Vector &target) {
+  Vector f = (target - origin).normalized();        // forward
+  Vector r = f.cross(Vector(0, 1, 0)).normalized(); // right
+  Vector u = r.cross(f);                            // up
+
+  double yaw = std::atan2(f.x, f.z);
+  double pitch = std::atan2(f.y, std::sqrt(f.x * f.x + f.z * f.z));
+  double roll = std::atan2(r.y, u.y);
+
+  rotate(yaw, roll, pitch);
 }

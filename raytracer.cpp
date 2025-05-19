@@ -19,11 +19,13 @@ int main() {
   const double VIEWPORT_DISTANCE = 1;
 
   Camera camera;
-  Scene scene(camera.getOrigin(), "basic", Vector(0, 0, 0));
+  Scene scene(camera.getOrigin(), "chat", Vector(0, 0, 0));
   Canvas canvas("frame.ppm", CANVAS_HEIGHT, CANVAS_WIDTH, VIEWPORT_HEIGHT,
                 VIEWPORT_WIDTH, VIEWPORT_DISTANCE);
   unsigned short recurr_lim = 10;
 
+  camera.render_animation(canvas, scene, 10, 80, "orbit");
+  /*
   //camera.move(2, 0, 0);
   //camera.rotate(8, 0, 0);
 
@@ -37,6 +39,7 @@ int main() {
 
     cout << static_cast<double>(duration.count()) / 1000000 << "," << endl;
   }
+  */
 
   return 1;
 }

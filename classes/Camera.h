@@ -34,6 +34,8 @@ public:
                          unsigned short recursion_limit);
 
   Vector CanvasToViewPort(Canvas &canvas, double x, double y);
+
+  void lookAt(const Vector &target);
 };
 
 #endif // !CAMERA_H
