@@ -131,10 +131,16 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
   // record original offset from center
   Vector origOffset = origin - orbitCenter;
 
+  Vector initialCamPos = origin;
+
   // constant for a full circle
   const double PI = 3.14159265358979323846;
   const double TWO_PI = 2.0 * PI;
 
+  const double total_dx = 10.0;   // ← adjust to taste
+  // How high above the ground plane:
+  const double groundY  = 0.5;    // ← “near ground”
+  //
   for (unsigned int i = 0; i < frame_count; ++i) {
     // name this frame’s file
     canvas.setName(file_path + canvas_name + std::to_string(i) + ".ppm");
@@ -165,6 +171,19 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
       rotate(-yawDeg, 0.0, pitchDeg);
 
       // lookAt(Vector(2, 0, 5));
+    } else if (anim_name == "passthru") {
+      double t = double(i) / frame_count;
+
+      // where we want to be this frame:
+      Vector desiredPos(initialCamPos.x + total_dx * t, // slide in X
+                        groundY,                        // fixed low Y
+                        initialCamPos.z                 // same Z
+      );
+      Vector delta = desiredPos - origin;
+      move(delta.x, delta.y, delta.z);
+
+      // always look at (0,0,5):
+      lookAt(Vector(0.0, 0.0, 5.0));
     }
 
     // render this frame
@@ -203,14 +222,14 @@ Vector Camera::CanvasToViewPort(Canvas &canvas, double x, double y) {
 
 void Camera::lookAt(const Vector &target) {
   Vector f = (target - origin).normalized();
-  Vector r = f.cross(Vector(0,1,0)).normalized();
+  Vector r = f.cross(Vector(0, 1, 0)).normalized();
   Vector u = r.cross(f);
 
-  double yaw   = std::atan2(f.x,  f.z);
-  double pitch = std::atan2(f.y, std::sqrt(f.x*f.x + f.z*f.z));
+  double yaw = std::atan2(f.x, f.z);
+  double pitch = std::atan2(f.y, std::sqrt(f.x * f.x + f.z * f.z));
 
-  double yawDeg   = yaw   * (180.0/M_PI);
-  double pitchDeg = pitch * (180.0/M_PI);
+  double yawDeg = yaw * (180.0 / M_PI);
+  double pitchDeg = pitch * (180.0 / M_PI);
 
   rotate(-yawDeg, 0.0, pitchDeg);
 }

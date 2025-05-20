@@ -57,7 +57,7 @@ Scene::Scene(Vector camera_origin, std::string scene_identify,
     lights.push_back(Light("directional", 0.2, Vector(1, 4, 4)));
   } else if (scene_identification == "chat") {
 
-    objects.push_back(new Cone(Vector(0, 0, 5), Vector(0, -1, 0), 2, 1,
+    objects.push_back(new Cone(Vector(0, 0, 6), Vector(0, -1, 0), 2, 1,
                                Vector(255, 0, 0), 100, 0.1, 0.0, 0));
 
     objects.push_back(new Sphere(camera_origin, Vector(0, -5001, 0), 5000,
