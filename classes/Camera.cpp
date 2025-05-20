@@ -212,6 +212,5 @@ void Camera::lookAt(const Vector &target) {
   double yawDeg   = yaw   * (180.0/M_PI);
   double pitchDeg = pitch * (180.0/M_PI);
 
-  std::cout << "yaw: " << -yawDeg << "\npitch: " << pitchDeg << std::endl;
   rotate(-yawDeg, 0.0, pitchDeg);
 }
