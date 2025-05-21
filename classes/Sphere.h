@@ -5,6 +5,7 @@
 #include "Object3D.h"
 #include "Vector.h"
 #include <array>
+#include <cmath>
 
 class Sphere : public Object3D {
 private:

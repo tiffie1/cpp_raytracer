@@ -10,5 +10,4 @@ exec_debug.dSYM/
 other/
 
 .vscode/
-
-
+build/*
