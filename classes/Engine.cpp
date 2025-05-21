@@ -1,9 +1,10 @@
 #include "Engine.h"
 #include "Inf.h"
 #include "Light.h"
-#include "Scene.h"
 #include "Object3D.h"
+#include "Scene.h"
 #include <cstdlib>
+#include <ctime>
 
 std::pair<const Object3D *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
@@ -12,7 +13,7 @@ ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
   const Object3D *closest_object = nullptr;
 
   std::array<double, 2> t;
-  //double direction_dot = direction.dot(direction);
+  // double direction_dot = direction.dot(direction);
 
   for (unsigned short i = 0; i < scene.objects.size(); i++) {
     const Object3D *object = scene.objects[i];
@@ -109,9 +110,8 @@ double ComputeLighting(Scene &scene, Vector intersect_point, Vector normal_vec,
         t_max = INF;
       }
 
-      calculate_spec_diff(scene, light, intersect_point, light_vec,
-                          normal_vec, view_vec, t_max, spec_val,
-                          intense_cumm);
+      calculate_spec_diff(scene, light, intersect_point, light_vec, normal_vec,
+                          view_vec, t_max, spec_val, intense_cumm);
 
       /*
       Vector L1 = normalize(light_vec);
@@ -187,6 +187,57 @@ Vector TraceRay(Scene &scene, Vector origin, Vector direction, double t_min,
   double intensity = ComputeLighting(scene, intersect_point, normal_vec,
                                      view_vec, closest_object->getSpecular());
   Vector local_color = closest_object->getColor() * intensity;
+
+  /*
+  // after your local_color = baseColor * intensity…
+  double sssD = closest_object->getSSSDistance();
+  Vector sssAlb = closest_object->getSSSAlbedo();
+
+  if (sssD > 0.0) {
+    const int SAMPLES = 32;
+    Vector sssAccum(0, 0, 0);
+
+    // build a local tangent‑space (u,v)
+    Vector n = normal_vec;
+    Vector upAxis = (fabs(n.x) > 0.1 ? Vector(0, 1, 0) : Vector(1, 0, 0));
+    Vector u = upAxis.cross(n).normalized();
+    Vector v = n.cross(u);
+
+    for (int k = 0; k < SAMPLES; ++k) {
+      // 1) sample an exponential depth
+      double u1 = rand() / double(RAND_MAX);
+      double dist = -sssD * std::log(1 - u1);
+      dist = std::min(dist, 3.0 * sssD);
+
+      // 2) cosine‑weighted hemisphere direction
+      double u2 = rand() / double(RAND_MAX), u3 = rand() / double(RAND_MAX);
+      double r = std::sqrt(u2), theta = 2 * M_PI * u3;
+      double x = r * std::cos(theta), y = r * std::sin(theta),
+             z = std::sqrt(1 - u2);
+
+      // 3) world‑space sample point
+      Vector sampleP =
+          intersect_point + u * x * dist + v * y * dist + n * z * dist;
+
+      // 4) reject or clamp outside points (if you can)
+      // if (!closest_object->isInside(sampleP)) continue;
+
+      // 5) recompute normal at sampleP
+      Vector sampleN = closest_object->normal(sampleP).normalized();
+
+      // 6) lighting at that interior point
+      double ssi = ComputeLighting(scene, sampleP, sampleN, view_vec,
+                                   closest_object->getSpecular());
+
+      sssAccum = sssAccum + closest_object->getColor() * ssi;
+    }
+
+    sssAccum = sssAccum * (1.0 / SAMPLES);
+
+    // 7) blend with normalized albedo
+    local_color = local_color * (Vector(1, 1, 1) - sssAlb) + sssAccum * sssAlb;
+  }
+  */
 
   float reflect_val = closest_object->getReflective();
   double transparency = closest_object->getTransparency();

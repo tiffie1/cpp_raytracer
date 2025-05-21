@@ -5,24 +5,23 @@ Cube::Cube(const Vector& center, double side_length,
            const Vector& color, double specular,
            double reflective, double transparency,
            double refractiveIdx)
-    : center_(center),
-      half_size_(side_length * 0.5),
-      color_(color),
-      specular_(specular),
-      reflective_(reflective),
-      transparency_(transparency),
-      refractiveIdx_(refractiveIdx) {}
+    : center(center),
+      half_size(side_length * 0.5),
+      color(color),
+      specular(specular),
+      reflective(reflective),
+      transparency(transparency),
+      refractiveIdx(refractiveIdx) {}
 
 std::array<double, 2> Cube::intersect(Vector &origin,
                                       Vector &direction) const {
     // Compute intersection of ray (origin, direction) with an axis-aligned cube
-    Vector bounds_min = center_ - Vector(half_size_, half_size_, half_size_);
-    Vector bounds_max = center_ + Vector(half_size_, half_size_, half_size_);
+    Vector bounds_min = center - Vector(half_size, half_size, half_size);
+    Vector bounds_max = center + Vector(half_size, half_size, half_size);
 
     double tmin = -INF;
     double tmax = INF;
 
-    // Slab method for x, y, z
     for (int i = 0; i < 3; ++i) {
         double o = origin[i];
         double d = direction[i];
@@ -30,7 +29,6 @@ std::array<double, 2> Cube::intersect(Vector &origin,
         double bmax = bounds_max[i];
 
         if (std::abs(d) < 1e-8) {
-            // Ray parallel to slab; no hit if origin not within bounds
             if (o < bmin || o > bmax)
                 return {INF, INF};
         } else {
@@ -47,8 +45,7 @@ std::array<double, 2> Cube::intersect(Vector &origin,
 }
 
 Vector Cube::normal(Vector &p) const {
-    // Determine which face is hit by comparing distances to center
-    Vector local = p - center_;
+    Vector local = p - center;
     double absx = std::abs(local.x);
     double absy = std::abs(local.y);
     double absz = std::abs(local.z);
@@ -63,17 +60,16 @@ Vector Cube::normal(Vector &p) const {
 }
 
 void Cube::shift(Vector displacement_vec) {
-    center_ = center_ + displacement_vec;
+    center = center + displacement_vec;
 }
 
 void Cube::rotate(double yaw, double pitch, double roll) {
     // Rotation for axis-aligned cube not supported.
-    // For an oriented box, you'd apply an inverse rotation to incoming rays.
 }
 
-Vector Cube::getCenter() const { return center_; }
-Vector Cube::getColor() const { return color_; }
-double Cube::getSpecular() const { return specular_; }
-double Cube::getReflective() const { return reflective_; }
-double Cube::getTransparency() const { return transparency_; }
-double Cube::getRefractiveIdx() const { return refractiveIdx_; }
+Vector Cube::getCenter() const { return center; }
+Vector Cube::getColor() const { return color; }
+double Cube::getSpecular() const { return specular; }
+double Cube::getReflective() const { return reflective; }
+double Cube::getTransparency() const { return transparency; }
+double Cube::getRefractiveIdx() const { return refractiveIdx; }

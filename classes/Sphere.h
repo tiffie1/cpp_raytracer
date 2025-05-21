@@ -2,11 +2,11 @@
 #define SPHERE_H
 
 #include "Inf.h"
-#include "Vector.h"
 #include "Object3D.h"
+#include "Vector.h"
 #include <array>
 
-class Sphere: public Object3D {
+class Sphere : public Object3D {
 private:
   Vector center;
   Vector offset;
@@ -19,12 +19,15 @@ private:
   bool is_valid;
   double refractive_idx;
   double transparency;
+  // double sss_distance;
+  // Vector sss_albedo;
 
 public:
   Sphere();
   Sphere(Vector camera_origin, Vector center_val, double radius_val,
          Vector color_vec, float specular_val, float reflect_val,
          double refracive_idx, double transparency);
+  // double sss_distance_val, Vector sss_albedo_val);
   ~Sphere();
 
   Vector getCenter() const;
@@ -37,6 +40,8 @@ public:
   bool is_defined() const;
   double getRefractiveIdx() const;
   double getTransparency() const;
+  // double getSSSDistance() const;
+  // Vector getSSSAlbedo() const;
 
   Sphere &operator=(const Sphere &other);
 

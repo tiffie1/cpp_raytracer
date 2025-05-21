@@ -25,7 +25,7 @@ These features, in no particular order, are some of the improvements that I wish
 - [ ] Shadow-rendering optimization.
 - [ ] Bounding Volume Hierarchies.
 - [ ] Options for subsampling.
-- [ ] More primitive shapes (triangle, pyramid, cone, square, etc.)
+- [x] More primitive shapes (triangle, pyramid, cone, square, etc.)
 - [ ] Complex shapes (i.e.: sphere with hole cut into it).
 - [ ] Parrallelism
 - [ ] CLI for user-friendly rendering of scenes.

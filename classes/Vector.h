@@ -24,12 +24,10 @@ public:
 
   Vector operator*(double scalar) const;
 
-  // 1) As a const member, callable on const or non‐const Vector:
   Vector operator-(const Vector &rhs) const {
     return Vector{x - rhs.x, y - rhs.y, z - rhs.z};
   }
 
-  // And similarly for +, *, etc.:
   Vector operator+(const Vector &rhs) const {
     return Vector{x + rhs.x, y + rhs.y, z + rhs.z};
   }

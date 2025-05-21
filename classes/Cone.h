@@ -26,14 +26,14 @@ public:
   double getRefractiveIdx() const;
 
 private:
-  Vector apex_;
-  Vector axis_; // normalized direction from apex to base center
-  double height_;
-  double radius_;
-  Vector color_;
-  double specular_;
-  double reflective_;
-  double transparency_;
+  Vector apex;
+  Vector axis; // normalized direction from apex to base center
+  double height;
+  double radius;
+  Vector color;
+  double specular;
+  double reflective;
+  double transparency;
   double refractiveIdx_;
   static constexpr double EPS = 1e-6;
   static constexpr double INF = std::numeric_limits<double>::infinity();

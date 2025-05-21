@@ -21,6 +21,8 @@ public:
   virtual double getReflective() const = 0;
   virtual double getTransparency() const = 0;
   virtual double getRefractiveIdx() const = 0;
+  //virtual double getSSSDistance() const = 0;
+  //virtual Vector getSSSAlbedo() const = 0;
 };
 
 #endif

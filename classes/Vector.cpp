@@ -79,7 +79,6 @@ bool Vector::operator==(const Vector &other) {
 Vector Vector::normalized() const {
     double len = sqrt(x * x + y * y + z * z);
     if (len == 0.0) {
-        // zero‐vector stays zero (or you could choose to assert)
         return Vector(0.0, 0.0, 0.0);
     }
     return Vector(x/len, y/len, z/len);
@@ -96,18 +95,14 @@ Vector Vector::cross(const Vector &other) const {
 static constexpr double DEG2RAD = M_PI/180.0;
 
 Vector Vector::rotate(double yawDeg, double pitchDeg, double rollDeg) const {
-    // Convert to radians
     double yaw   = yawDeg   * DEG2RAD;
     double pitch = pitchDeg * DEG2RAD;
     double roll  = rollDeg  * DEG2RAD;
 
-    // Precompute sines and cosines
     double cy = std::cos(yaw),   sy = std::sin(yaw);
     double cp = std::cos(pitch), sp = std::sin(pitch);
     double cr = std::cos(roll),  sr = std::sin(roll);
 
-    // Build the combined rotation matrix R = Rz(roll) * Rx(pitch) * Ry(yaw)
-    // Note: order matters. You can adjust based on the convention you want.
     double m00 =  cy*cr + sy*sp*sr;
     double m01 =  cr*sy*sp - cy*sr;
     double m02 =  cp*sy;
@@ -120,7 +115,6 @@ Vector Vector::rotate(double yawDeg, double pitchDeg, double rollDeg) const {
     double m21 =  sy*sr + cy*cr*sp;
     double m22 =  cy*cp;
 
-    // Apply R to this vector
     return Vector(
         m00 * x + m01 * y + m02 * z,
         m10 * x + m11 * y + m12 * z,

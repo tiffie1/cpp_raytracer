@@ -126,42 +126,31 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
   std::string canvas_name =
       canvas.getName().substr(0, canvas.getName().find(".ppm"));
 
-  // Precompute orbit info
   const Vector orbitCenter(0.0, 0.0, 5.0);
-  // record original offset from center
   Vector origOffset = origin - orbitCenter;
 
   Vector initialCamPos = origin;
 
-  // constant for a full circle
   const double PI = 3.14159265358979323846;
   const double TWO_PI = 2.0 * PI;
 
-  const double total_dx = 10.0;   // ← adjust to taste
-  // How high above the ground plane:
-  const double groundY  = 0.5;    // ← “near ground”
-  //
+  const double total_dx = 10.0;
+  const double groundY  = 0.5;
+
   for (unsigned int i = 0; i < frame_count; ++i) {
-    // name this frame’s file
     canvas.setName(file_path + canvas_name + std::to_string(i) + ".ppm");
 
-    // --- orbit case: reposition & rotate camera BEFORE rendering ---
-    //
     if (anim_name == "orbit") {
-      // compute how far around the circle we are [0..2π)
       double angle = TWO_PI * static_cast<double>(i) / frame_count;
 
-      // rotate the original offset around Y
       Vector desiredOffset(
           origOffset.x * cos(angle) - origOffset.z * sin(angle), origOffset.y,
           origOffset.x * sin(angle) + origOffset.z * cos(angle));
 
-      // move the camera into position
       Vector desiredPos = orbitCenter + desiredOffset;
       Vector delta = desiredPos - origin;
       move(delta.x, delta.y, delta.z);
 
-      // now orient it so it “looks at” the center
       rotate(0, 0, 0);
       Vector dir = (orbitCenter - origin).normalized();
       double yaw = atan2(dir.x, dir.z);
@@ -170,26 +159,22 @@ void Camera::render_animation(Canvas &canvas, Scene &scene,
       double pitchDeg = pitch * 180.0 / M_PI;
       rotate(-yawDeg, 0.0, pitchDeg);
 
-      // lookAt(Vector(2, 0, 5));
     } else if (anim_name == "passthru") {
       double t = double(i) / frame_count;
 
-      // where we want to be this frame:
-      Vector desiredPos(initialCamPos.x + total_dx * t, // slide in X
-                        groundY,                        // fixed low Y
-                        initialCamPos.z                 // same Z
+      Vector desiredPos(initialCamPos.x + total_dx * t, 
+                        groundY,                       
+                        initialCamPos.z               
       );
+
       Vector delta = desiredPos - origin;
       move(delta.x, delta.y, delta.z);
 
-      // always look at (0,0,5):
       lookAt(Vector(0.0, 0.0, 5.0));
     }
 
-    // render this frame
     render_scene(canvas, scene, recursion_limit);
 
-    // --- the existing object‐motion cases run *after* render ---
     if (anim_name == "roll") {
       double temp = linear_map(i, 0, frame_count, 1, 3);
       scene.objects[1]->shift(Vector(fractional_function(temp, 5), 0, 0));
