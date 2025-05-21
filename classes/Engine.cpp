@@ -3,8 +3,7 @@
 #include "Light.h"
 #include "Object3D.h"
 #include "Scene.h"
-#include <cstdlib>
-#include <ctime>
+#include <algorithm>
 
 std::pair<const Object3D *, double>
 ClosestIntersection(Scene &scene, Vector origin, Vector direction, double t_min,
